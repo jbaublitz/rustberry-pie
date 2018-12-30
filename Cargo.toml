@@ -1,0 +1,12 @@
+[package]
+name = "rustberry-pie"
+version = "0.1.0"
+authors = ["John Baublitz <john.m.baublitz@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "kernel8"
+path = "src/main.rs"
+
+[build-dependencies]
+cc = "*"
