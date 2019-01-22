@@ -1,13 +1,14 @@
 CC=/usr/bin/clang
 OBJCOPY=/usr/bin/llvm-objcopy-6.0
 LD=ld.lld-6.0
+RS_FILES=$(shell find . -name *.rs)
 
 all: kernel8.img
 
 %.o: src/%.S
 	$(CC) --target=aarch64 -c $^ -o boot.o
 
-rustpi.o: src/$(wildcard *.rs)
+rustpi.o: $(RS_FILES)
 	xargo rustc --release -- --emit obj=rustpi.o --target=aarch64-unknown-none
 
 kernel8.elf: boot.o rustpi.o

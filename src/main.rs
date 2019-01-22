@@ -1,16 +1,18 @@
 #![no_std]
 #![no_main]
-#![feature(align_offset)]
+#![feature(align_offset,asm)]
 
 use core::panic::PanicInfo;
-use core::ptr;
+
+mod asm;
+mod intr;
+mod uart;
 
 extern "C" {
     fn system_down() -> !;
 }
 
 #[panic_handler]
-#[link_section = ".text"]
 pub fn panic_handler(_info: &PanicInfo) -> ! {
     unsafe { system_down() }
 }
@@ -18,12 +20,10 @@ pub fn panic_handler(_info: &PanicInfo) -> ! {
 #[link_section = ".text"]
 #[no_mangle]
 pub fn kernel_main() {
-}
-
-#[link_section = ".text"]
-#[no_mangle]
-pub fn memset(addr: *mut u8, val: u8, len: u64) {
-    for i in 0..len {
-        unsafe { ptr::write_volatile(addr.offset(i as isize), val) }
-    }
+    match uart::hello_world_uart() {
+        Ok(()) => (),
+        Err(()) => {
+            unsafe { system_down() };
+        }
+    };
 }

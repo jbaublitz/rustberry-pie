@@ -20,12 +20,6 @@ master:
     bl kernel_main
 
 .section ".text"
-proc_down:
-    mov w0, #0x000B
-    movk w0, #0x8400, lsl #16
-    smc #0
-    b system_down
-
 system_down:
     mov w0, #0x0008
     movk w0, #0x8400, lsl #16
